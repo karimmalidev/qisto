@@ -49,4 +49,17 @@ export class SessionService {
 
     return { sessionId: session.id, userId: session.userId };
   };
+
+  getSessions = async (input: { userId: string }) => {
+    return await this.db.query.sessions.findMany({
+      where: { userId: input.userId },
+      columns: {
+        id: true,
+        ipAddress: true,
+        userAgent: true,
+        createdAt: true,
+        lastSyncBefore: true,
+      },
+    });
+  };
 }

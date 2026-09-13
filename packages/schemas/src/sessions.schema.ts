@@ -12,4 +12,19 @@ export const postSessionsSchema = z.object({
   }),
 });
 
+export const getSessionsSchema = z.object({
+  response: z.object({
+    body: z
+      .object({
+        id: z.uuid(),
+        ipAddress: z.string().nullable(),
+        userAgent: z.string().nullable(),
+        createdAt: z.coerce.date(),
+        lastSyncBefore: z.coerce.date(),
+      })
+      .array(),
+  }),
+});
+
 export type PostSessions = z.infer<typeof postSessionsSchema>;
+export type GetSessions = z.infer<typeof getSessionsSchema>;
