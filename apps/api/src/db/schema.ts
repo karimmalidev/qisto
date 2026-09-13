@@ -28,7 +28,7 @@ export const sessions = pgTable("sessions", {
   userId: uuid()
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  hashedToken: text().notNull(),
+  hashedToken: text().notNull().unique(),
   ipAddress: text(),
   userAgent: text(),
   lastSyncBefore: timestamp({ withTimezone: true, mode: "date" })
