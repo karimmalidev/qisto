@@ -1,0 +1,23 @@
+services:
+  qisto-db:
+    image: postgres:15-alpine
+    container_name: qisto_postgres
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: qisto
+    ports:
+      - "5432:5432"
+    volumes:
+      - qisto_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d qisto"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  qisto_db_data:
