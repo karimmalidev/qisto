@@ -5,6 +5,7 @@ import { loggerMiddleware } from "./middlewares/logger.middleware.ts";
 import { errorMiddleware } from "./middlewares/error.middleware.ts";
 import { appRouter } from "./app-router.ts";
 import { strings } from "@qisto/schemas";
+import cors from "cors";
 
 const app: Express = express();
 const port = 3000;
@@ -12,6 +13,14 @@ const port = 3000;
 const container = new AppContainer(db);
 
 app.use(loggerMiddleware());
+
+app.use(
+  cors({
+    origin: process.env.ALLOWED_ORIGINS,
+    credentials: true,
+  }),
+);
+
 app.use(json());
 app.use(appRouter(container));
 app.use((req, res) =>
