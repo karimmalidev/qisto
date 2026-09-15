@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# TODO: Temporary until writing full schema
+migrations/
