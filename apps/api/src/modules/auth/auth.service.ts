@@ -1,12 +1,12 @@
 import { strings, UnauthorizedError } from "@qisto/schemas";
 import type { DB } from "../../db/index.ts";
 import { sessions } from "../../db/schema.ts";
-import { SessionUtils } from "./session.utils.ts";
+import { AuthUtils } from "./auth.utils.ts";
 
-export class SessionService {
+export class AuthService {
   constructor(private readonly db: DB) {}
 
-  create = async (input: {
+  login = async (input: {
     username: string;
     password: string;
     ipAddress: string | null;
@@ -18,15 +18,15 @@ export class SessionService {
 
     if (
       !user ||
-      !(await SessionUtils.matchPassword(input.password, user.hashedPassword))
+      !(await AuthUtils.matchPassword(input.password, user.hashedPassword))
     ) {
       throw new UnauthorizedError(strings.INVALID_USERNAME_OR_PASSWORD);
     }
 
-    const token = SessionUtils.generateToken();
+    const token = AuthUtils.generateToken();
     await this.db.insert(sessions).values({
       userId: user.id,
-      hashedToken: SessionUtils.hashToken(token),
+      hashedToken: AuthUtils.hashToken(token),
       userAgent: input.userAgent,
       ipAddress: input.ipAddress,
     });
@@ -37,7 +37,7 @@ export class SessionService {
   verify = async (input: { token: string }) => {
     const session = await this.db.query.sessions.findFirst({
       where: {
-        hashedToken: SessionUtils.hashToken(input.token),
+        hashedToken: AuthUtils.hashToken(input.token),
         revokedAt: { isNull: true },
       },
       columns: { userId: true, id: true },
@@ -48,18 +48,5 @@ export class SessionService {
     }
 
     return { sessionId: session.id, userId: session.userId };
-  };
-
-  getSessions = async (input: { userId: string }) => {
-    return await this.db.query.sessions.findMany({
-      where: { userId: input.userId },
-      columns: {
-        id: true,
-        ipAddress: true,
-        userAgent: true,
-        createdAt: true,
-        lastSyncBefore: true,
-      },
-    });
   };
 }

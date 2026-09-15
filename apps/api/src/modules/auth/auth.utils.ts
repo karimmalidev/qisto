@@ -1,7 +1,7 @@
 import argon2 from "argon2";
 import { createHash, randomBytes } from "crypto";
 
-export class SessionUtils {
+export class AuthUtils {
   static generateToken = () => {
     return randomBytes(32).toString("base64url");
   };

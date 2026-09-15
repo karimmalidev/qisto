@@ -1,4 +1,9 @@
-import { PAYMENT_METHODS, PAYMENT_TYPES } from "@qisto/schemas";
+import {
+  OPERATION_METHODS,
+  OPERATION_RESOURCE_TYPES,
+  PAYMENT_METHODS,
+  PAYMENT_TYPES,
+} from "@qisto/schemas";
 import {
   date,
   integer,
@@ -9,6 +14,7 @@ import {
   real,
   pgEnum,
   boolean,
+  json,
 } from "drizzle-orm/pg-core";
 import { v7 } from "uuid";
 
@@ -19,6 +25,9 @@ export const users = pgTable("users", {
   name: text().notNull(),
   username: text().notNull().unique(),
   hashedPassword: text().notNull(),
+  updatedAt: timestamp({ withTimezone: true, mode: "date" })
+    .notNull()
+    .defaultNow(),
 });
 
 export const sessions = pgTable("sessions", {
@@ -31,26 +40,34 @@ export const sessions = pgTable("sessions", {
   hashedToken: text().notNull().unique(),
   ipAddress: text(),
   userAgent: text(),
-  lastSyncBefore: timestamp({ withTimezone: true, mode: "date" })
-    .notNull()
-    .defaultNow(),
+  lastSyncedOperationId: uuid(),
   revokedAt: timestamp({ withTimezone: true, mode: "date" }),
   createdAt: timestamp({ withTimezone: true, mode: "date" })
     .notNull()
     .defaultNow(),
 });
 
+export const operationResourceType = pgEnum(
+  "operationTypes",
+  OPERATION_RESOURCE_TYPES,
+);
+
+export const operationMethod = pgEnum("operationMethods", OPERATION_METHODS);
+
 export const operations = pgTable("operations", {
   id: uuid()
     .primaryKey()
     .$defaultFn(() => v7()),
-  sessionId: uuid()
+  userId: uuid()
     .notNull()
-    .references(() => sessions.id, { onDelete: "cascade" }),
-  metadata: text(),
-  createdAt: timestamp({ withTimezone: true, mode: "date" })
-    .notNull()
-    .defaultNow(),
+    .references(() => users.id, { onDelete: "cascade" }),
+  sessionId: uuid().references(() => sessions.id, {
+    onDelete: "set null",
+  }),
+  resourceType: operationResourceType().notNull(),
+  resourceId: uuid().notNull(),
+  method: operationMethod().notNull(),
+  payload: json(),
 });
 
 export const customers = pgTable("customers", {
@@ -66,10 +83,10 @@ export const customers = pgTable("customers", {
   nationalId: text(),
   address: text(),
   notes: text(),
-  deletedAt: timestamp({
-    withTimezone: true,
-    mode: "date",
-  }),
+  updatedAt: timestamp({ withTimezone: true, mode: "date" })
+    .notNull()
+    .defaultNow(),
+  deletedAt: timestamp({ withTimezone: true, mode: "date" }),
 });
 
 export const products = pgTable("products", {
@@ -81,10 +98,10 @@ export const products = pgTable("products", {
     .references(() => users.id, { onDelete: "cascade" }),
   name: text().notNull(),
   priceCents: integer().notNull(),
-  deletedAt: timestamp({
-    withTimezone: true,
-    mode: "date",
-  }),
+  updatedAt: timestamp({ withTimezone: true, mode: "date" })
+    .notNull()
+    .defaultNow(),
+  deletedAt: timestamp({ withTimezone: true, mode: "date" }),
 });
 
 export const installmentContracts = pgTable("installmentContracts", {
@@ -99,11 +116,12 @@ export const installmentContracts = pgTable("installmentContracts", {
     .references(() => products.id, { onDelete: "restrict" }),
   productNameSnapshot: text().notNull(),
   productPriceCentsSnapshot: integer().notNull(),
+  discountCents: integer().notNull(),
   downPaymentCents: integer().notNull(),
-  interestRate: real().notNull(),
+  interestRatePercent: real().notNull(),
   notes: text(),
   completed: boolean().notNull().default(false),
-  createdAt: timestamp({ withTimezone: true, mode: "date" })
+  updatedAt: timestamp({ withTimezone: true, mode: "date" })
     .notNull()
     .defaultNow(),
   deletedAt: timestamp({ withTimezone: true, mode: "date" }),
@@ -117,8 +135,12 @@ export const installmentSchedules = pgTable("installmentSchedules", {
     .notNull()
     .references(() => installmentContracts.id, { onDelete: "cascade" }),
   completed: boolean().notNull().default(false),
-  dueDate: date().notNull(),
+  dueDate: date({ mode: "date" }).notNull(),
   amountDueCents: integer().notNull(),
+  updatedAt: timestamp({ withTimezone: true, mode: "date" })
+    .notNull()
+    .defaultNow(),
+  deletedAt: timestamp({ withTimezone: true, mode: "date" }),
 });
 
 export const paymentType = pgEnum("paymentTypes", PAYMENT_TYPES);
@@ -135,8 +157,12 @@ export const payments = pgTable("payments", {
   amountPaidCents: integer().notNull(),
   method: paymentMethod().notNull(),
   type: paymentType().notNull(),
-  paidAt: timestamp({ withTimezone: true, mode: "date" }).notNull(),
+  paidAt: timestamp({ withTimezone: true, mode: "date" }),
   notes: text(),
+  updatedAt: timestamp({ withTimezone: true, mode: "date" })
+    .notNull()
+    .defaultNow(),
+  deletedAt: timestamp({ withTimezone: true, mode: "date" }),
 });
 
 export const paymentAllocations = pgTable("paymentAllocations", {
@@ -146,8 +172,12 @@ export const paymentAllocations = pgTable("paymentAllocations", {
   paymentId: uuid()
     .notNull()
     .references(() => payments.id, { onDelete: "cascade" }),
-  installmentScheduleId: uuid()
+  scheduleId: uuid()
     .notNull()
     .references(() => installmentSchedules.id, { onDelete: "cascade" }),
   amountCents: integer().notNull(),
+  updatedAt: timestamp({ withTimezone: true, mode: "date" })
+    .notNull()
+    .defaultNow(),
+  deletedAt: timestamp({ withTimezone: true, mode: "date" }),
 });

@@ -13,7 +13,7 @@ export const authMiddleware =
       throw new UnauthorizedError();
     }
 
-    const verified = await container.sessionService.verify({ token });
+    const verified = await container.authService.verify({ token });
 
     req.userId = verified.userId;
     req.sessionId = verified.sessionId;
