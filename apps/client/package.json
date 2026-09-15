@@ -20,6 +20,7 @@
     "@libsql/client": "^0.18.0",
     "@qisto/schemas": "workspace:*",
     "@tailwindcss/vite": "^4",
+    "@tauri-apps/api": "^2.11.1",
     "@tauri-apps/plugin-sql": "^2.4.1",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.3.0",

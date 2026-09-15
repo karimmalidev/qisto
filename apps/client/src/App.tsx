@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button"
 import { getDb } from "./db"
 import { users } from "./db/schema"
 
+import { invoke } from "@tauri-apps/api/core"
+
 export function App() {
   const onClick = async () => {
     const db = await getDb()
@@ -13,6 +15,8 @@ export function App() {
     console.log({ insertReturn })
     console.log({ findManyReturn })
     console.log("OK")
+
+    await testKeyring()
   }
   return (
     <div className="flex min-h-svh p-6">
@@ -34,3 +38,36 @@ export function App() {
 }
 
 export default App
+
+async function testKeyring() {
+  const service = "com.myapp.service" // Use reverse domain syntax for OS keyrings
+  const account = "user_session"
+
+  // 1. Store
+  try {
+    console.log("Attempting to store token...")
+    await invoke("store_user_token", {
+      service,
+      account,
+      token: "Here is a token 2",
+    })
+    console.log("Token successfully stored!")
+  } catch (err) {
+    console.error("Store Failed:", err)
+    return // Stop execution if store failed
+  }
+
+  // 2. Retrieve
+  try {
+    console.log("Attempting to fetch token...")
+    const token = await invoke("get_user_token", {
+      service,
+      account,
+    })
+    console.log("Token retrieved successfully:", token)
+  } catch (err) {
+    console.error("Fetch Failed:", err)
+  }
+}
+
+testKeyring()
