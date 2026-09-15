@@ -11,27 +11,37 @@ import { Toaster } from "sonner"
 import { AuthProvider } from "./features/auth/auth-provider.tsx"
 import { DashboardHomePage } from "./pages/dashboard/dashboard-home-page.tsx"
 import { ProtectedRoute } from "./protected-route.tsx"
+import { TooltipProvider } from "./components/ui/tooltip.tsx"
+import { ProtectedLayout } from "./protected-layout.tsx"
+import { NotFoundPage } from "./pages/not-found/not-found-page.tsx"
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
       <DirectionProvider dir="rtl">
-        <QueryClientProvider client={new QueryClient()}>
-          <AuthProvider>
-            <BrowserRouter>
-              <Routes>
-                {/* Public routes */}
-                <Route path="/login" element={<LoginPage />} />
+        <TooltipProvider>
+          <QueryClientProvider client={new QueryClient()}>
+            <AuthProvider>
+              <BrowserRouter>
+                <Routes>
+                  {/* Public routes */}
+                  <Route path="/login" element={<LoginPage />} />
 
-                {/* Protected routes */}
-                <Route element={<ProtectedRoute />}>
-                  <Route path="/" element={<DashboardHomePage />} />
-                </Route>
-              </Routes>
-            </BrowserRouter>
-            <Toaster richColors />
-          </AuthProvider>
-        </QueryClientProvider>
+                  {/* Protected routes */}
+                  <Route element={<ProtectedRoute />}>
+                    <Route element={<ProtectedLayout />}>
+                      <Route path="/" element={<DashboardHomePage />} />
+                    </Route>
+                  </Route>
+
+                  {/* 404 */}
+                  <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+              </BrowserRouter>
+              <Toaster richColors theme="system" />
+            </AuthProvider>
+          </QueryClientProvider>
+        </TooltipProvider>
       </DirectionProvider>
     </ThemeProvider>
   </StrictMode>
