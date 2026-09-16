@@ -1,20 +1,9 @@
-import {
-  Sun,
-  Moon,
-  SunIcon,
-  MoonIcon,
-  ComputerIcon,
-  SunMoonIcon,
-  MonitorCogIcon,
-} from "lucide-react"
+import { SunIcon, MoonIcon, MonitorCogIcon } from "lucide-react"
 import { useTheme } from "../theme-provider"
-import { Button } from "../ui/button"
 import {
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenu,
-  DropdownMenuLabel,
   DropdownMenuCheckboxItem,
   DropdownMenuSeparator,
 } from "../ui/dropdown-menu"

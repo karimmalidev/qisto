@@ -77,7 +77,7 @@ export function SidebarMain() {
             <Link to="/products">
               <SidebarMenuButton>
                 <BoxIcon />
-                <span>ادارة الصنف</span>
+                <span>ادارة الاصناف</span>
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>

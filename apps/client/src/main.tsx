@@ -9,7 +9,7 @@ import { LoginPage } from "./pages/login/login-page.tsx"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Toaster } from "sonner"
 import { AuthProvider } from "./features/auth/auth-provider.tsx"
-import { DashboardHomePage } from "./pages/dashboard/dashboard-home-page.tsx"
+import { HomePage } from "./pages/home/home-page.tsx"
 import { ProtectedRoute } from "./protected-route.tsx"
 import { TooltipProvider } from "./components/ui/tooltip.tsx"
 import { ProtectedLayout } from "./protected-layout.tsx"
@@ -30,7 +30,7 @@ createRoot(document.getElementById("root")!).render(
                   {/* Protected routes */}
                   <Route element={<ProtectedRoute />}>
                     <Route element={<ProtectedLayout />}>
-                      <Route path="/" element={<DashboardHomePage />} />
+                      <Route path="/" element={<HomePage />} />
                     </Route>
                   </Route>
 
