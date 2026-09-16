@@ -10,6 +10,10 @@ export const PAYMENT_METHODS = [
   "OTHER",
 ] as const;
 
+export type PaymentType = (typeof PAYMENT_TYPES)[number];
+
+export type PaymentMethod = (typeof PAYMENT_METHODS)[number];
+
 export const paymentSchema = z.object({
   customerId: z.uuid(),
   amountPaidCents: z.int().positive(),
