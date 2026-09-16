@@ -3,6 +3,7 @@ import {
   OPERATION_RESOURCE_TYPES,
   PAYMENT_METHODS,
   PAYMENT_TYPES,
+  type Operation,
 } from "@qisto/schemas";
 import {
   date,
@@ -67,7 +68,7 @@ export const operations = pgTable("operations", {
   resourceType: operationResourceType().notNull(),
   resourceId: uuid().notNull(),
   method: operationMethod().notNull(),
-  payload: json(),
+  payload: json().$type<Operation["payload"]>(),
 });
 
 export const customers = pgTable("customers", {
