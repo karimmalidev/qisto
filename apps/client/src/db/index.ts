@@ -14,6 +14,8 @@ export type DB = SqliteRemoteDatabase<typeof schema>
 async function initDb(): Promise<DB> {
   const sqlite = await Database.load("sqlite:qisto.db")
 
+  await sqlite.execute("PRAGMA foreign_keys = ON")
+
   // 1. Ensure migrations tracking table exists
   await sqlite.execute(`
     CREATE TABLE IF NOT EXISTS __drizzle_migrations (
