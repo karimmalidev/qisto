@@ -11,7 +11,14 @@ const migrationFiles = import.meta.glob("./migrations/*/*.sql", {
 
 export type DB = SqliteRemoteDatabase<typeof schema>
 
-async function initDb(): Promise<DB> {
+let db: DB | undefined
+
+export const getDb = () => {
+  if (!db) throw new Error()
+  return db
+}
+
+export async function initDb() {
   const sqlite = await Database.load("sqlite:qisto.db")
 
   await sqlite.execute("PRAGMA foreign_keys = ON")
@@ -57,8 +64,8 @@ async function initDb(): Promise<DB> {
     }
   }
 
-  // 4. Return Drizzle instance
-  return drizzle(
+  // 4. Store Drizzle instance
+  db = drizzle(
     async (sql, params, method) => {
       try {
         if (method === "all" || method === "get") {
@@ -79,13 +86,4 @@ async function initDb(): Promise<DB> {
     },
     { schema }
   )
-}
-
-let db: DB | undefined
-
-export const getDb = async () => {
-  if (!db) {
-    db = await initDb()
-  }
-  return db
 }

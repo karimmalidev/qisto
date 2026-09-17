@@ -1,8 +1,8 @@
-import type {
-  OperationMethod,
-  OperationResourceType,
-  PaymentMethod,
-  PaymentType,
+import {
+  OPERATION_METHODS,
+  OPERATION_RESOURCE_TYPES,
+  PAYMENT_METHODS,
+  PAYMENT_TYPES,
 } from "@qisto/schemas"
 import {
   integer,
@@ -23,10 +23,10 @@ export const operations = sqliteTable("operations", {
   id: text()
     .primaryKey()
     .$defaultFn(() => v7()),
-  resourceType: text().$type<OperationResourceType[number]>().notNull(),
+  resourceType: text({ enum: OPERATION_RESOURCE_TYPES }).notNull(),
   resourceId: text().notNull(),
-  method: text().$type<OperationMethod>().notNull(),
-  payload: text(),
+  method: text({ enum: OPERATION_METHODS }).notNull(),
+  payload: text({ mode: "json" }),
 })
 
 export const customers = sqliteTable("customers", {
@@ -123,8 +123,8 @@ export const payments = sqliteTable(
       .notNull()
       .references(() => customers.id, { onDelete: "restrict" }),
     amountPaidCents: integer().notNull(),
-    method: text().$type<PaymentMethod>().notNull(),
-    type: text().$type<PaymentType>().notNull(),
+    method: text({ enum: PAYMENT_METHODS }).notNull(),
+    type: text({ enum: PAYMENT_TYPES }).notNull(),
     paidAt: integer({ mode: "timestamp_ms" }).notNull(),
     notes: text(),
     updatedAt: integer({ mode: "timestamp_ms" })
