@@ -25,8 +25,10 @@ import { DeleteProductDialog } from "./dialogs/delete-product-dialog"
 
 export function ProductItem({
   product,
+  hideActions,
 }: {
   product: typeof products.$inferSelect
+  hideActions?: boolean
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [updateOpen, setUpdateOpen] = useState(false)
@@ -35,11 +37,11 @@ export function ProductItem({
   return (
     <>
       <Item
-        onClick={() => setDropdownOpen(true)}
+        onClick={hideActions ? undefined : () => setDropdownOpen(true)}
         variant="outline"
         className={cn(
-          "cursor-pointer hover:bg-muted",
-          dropdownOpen && "bg-muted"
+          !hideActions && "cursor-pointer hover:bg-muted",
+          !hideActions && dropdownOpen && "bg-muted"
         )}
       >
         <ItemMedia variant="image">
@@ -51,31 +53,33 @@ export function ProductItem({
             {formatCurrency(product.priceCents / 100)}
           </ItemDescription>
         </ItemContent>
-        <ItemActions>
-          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-            <DropdownMenuTrigger asChild>
-              <Button size="icon" variant="ghost">
-                <MoreVerticalIcon />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => setUpdateOpen(true)}>
-                  <EditIcon />
-                  تغيير الاسم أو السعر
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  variant="destructive"
-                  onClick={() => setDeleteOpen(true)}
-                >
-                  <TrashIcon />
-                  حذف الصنف
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </ItemActions>
+        {!hideActions && (
+          <ItemActions>
+            <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+              <DropdownMenuTrigger asChild>
+                <Button size="icon" variant="ghost">
+                  <MoreVerticalIcon />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem onClick={() => setUpdateOpen(true)}>
+                    <EditIcon />
+                    تغيير الاسم أو السعر
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onClick={() => setDeleteOpen(true)}
+                  >
+                    <TrashIcon />
+                    حذف الصنف
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </ItemActions>
+        )}
       </Item>
 
       <UpdateProductDialog

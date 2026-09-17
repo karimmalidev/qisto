@@ -64,7 +64,7 @@ export function CreateCustomerDialog({
               جميع الخانات اختيارية ما عدا الاسم
             </DialogDescription>
           </DialogHeader>
-          <FieldGroup className="max-h-[50dvh] overflow-y-scroll">
+          <FieldGroup className="max-h-[60dvh] overflow-y-scroll">
             <Field>
               <FieldLabel htmlFor="name">الاسم</FieldLabel>
               <Input id="name" name="name" required />

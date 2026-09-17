@@ -17,6 +17,9 @@ import { NotFoundPage } from "./pages/not-found/not-found-page.tsx"
 import { ProductsPage } from "./pages/products/products-page.tsx"
 import { initDb } from "./db/index.ts"
 import { CustomersPage } from "./pages/customers/customers-page.tsx"
+import { CreateInstallmentContractPage } from "./pages/installment-contracts/create/create-installment-contract-page.tsx"
+
+const queryClient = new QueryClient()
 
 initDb().then(() =>
   createRoot(document.getElementById("root")!).render(
@@ -24,7 +27,7 @@ initDb().then(() =>
       <ThemeProvider>
         <DirectionProvider dir="rtl">
           <TooltipProvider>
-            <QueryClientProvider client={new QueryClient()}>
+            <QueryClientProvider client={queryClient}>
               <AuthProvider>
                 <BrowserRouter>
                   <Routes>
@@ -37,6 +40,10 @@ initDb().then(() =>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/products" element={<ProductsPage />} />
                         <Route path="/customers" element={<CustomersPage />} />
+                        <Route
+                          path="/installment-contracts/create"
+                          element={<CreateInstallmentContractPage />}
+                        />
                       </Route>
                     </Route>
 

@@ -12,7 +12,6 @@ import {
   text,
   timestamp,
   uuid,
-  real,
   pgEnum,
   boolean,
   json,
@@ -119,7 +118,7 @@ export const installmentContracts = pgTable("installmentContracts", {
   productPriceCentsSnapshot: integer().notNull(),
   discountCents: integer().notNull(),
   downPaymentCents: integer().notNull(),
-  interestRatePercent: real().notNull(),
+  interestCents: integer().notNull(),
   notes: text(),
   completed: boolean().notNull().default(false),
   updatedAt: timestamp({ withTimezone: true, mode: "date" })

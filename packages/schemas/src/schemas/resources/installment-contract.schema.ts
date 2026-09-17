@@ -7,7 +7,7 @@ export const installmentContractSchema = z.object({
   productPriceCentsSnapshot: z.int().positive(),
   discountCents: z.int().nonnegative(),
   downPaymentCents: z.int().nonnegative(),
-  interestRatePercent: z.number().min(0).max(100),
+  interestCents: z.int().nonnegative(),
   notes: z.string().nullable(),
   completed: z.boolean(),
   updatedAt: z.coerce.date(),

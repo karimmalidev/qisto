@@ -7,7 +7,6 @@ import {
 import {
   integer,
   index,
-  real,
   sqliteTable,
   text,
   unique,
@@ -75,7 +74,7 @@ export const installmentContracts = sqliteTable(
     productPriceCentsSnapshot: integer().notNull(),
     discountCents: integer().notNull(),
     downPaymentCents: integer().notNull(),
-    interestRatePercent: real().notNull(),
+    interestCents: integer().notNull(),
     notes: text(),
     completed: integer({ mode: "boolean" }).notNull().default(false),
     updatedAt: integer({ mode: "timestamp_ms" })

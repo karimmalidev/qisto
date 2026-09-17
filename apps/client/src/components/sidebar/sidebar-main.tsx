@@ -22,7 +22,7 @@ export function SidebarMain() {
         <SidebarGroupLabel>الوصول السريع</SidebarGroupLabel>
         <SidebarMenu className="gap-1">
           <SidebarMenuItem>
-            <Link to="/customers">
+            <Link to="/installment-contracts/create">
               <SidebarMenuButton variant="primary">
                 <CalendarPlusIcon />
                 <span>تقسيط</span>
