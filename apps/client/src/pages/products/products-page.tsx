@@ -2,7 +2,7 @@ import { PageContainer } from "@/components/page-container"
 import { ItemGroup } from "@/components/ui/item"
 import { ProductItem } from "./components/product-item"
 import { Button } from "@/components/ui/button"
-import { PlusIcon, Search, SearchIcon } from "lucide-react"
+import { PlusIcon, SearchIcon } from "lucide-react"
 import { CreateProductDialog } from "./components/dialogs/create-product-dialog"
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
@@ -62,7 +62,7 @@ export function ProductsPage() {
               <SearchIcon />
             </InputGroupAddon>
             <InputGroupAddon align="inline-end">
-              {query.data ? `${query.data.length} اصناف` : `جاري البحث`}
+              {query.data ? `${query.data.length} صنف` : `جاري البحث`}
             </InputGroupAddon>
           </InputGroup>
 

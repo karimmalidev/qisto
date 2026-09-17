@@ -15,18 +15,27 @@ import {
   ItemDescription,
   ItemActions,
 } from "@/components/ui/item"
-import type { products } from "@/db/schema"
-import { formatCurrency } from "@/lib/format"
-import { BoxIcon, EditIcon, MoreVerticalIcon, TrashIcon } from "lucide-react"
+import type { customers } from "@/db/schema"
+import {
+  EditIcon,
+  IdCardIcon,
+  MapPinIcon,
+  MoreVerticalIcon,
+  NotebookPenIcon,
+  PhoneIcon,
+  TrashIcon,
+  UserIcon,
+} from "lucide-react"
 import { useState } from "react"
-import { UpdateProductDialog } from "./dialogs/update-product-dialog"
 import { cn } from "cn"
-import { DeleteProductDialog } from "./dialogs/delete-product-dialog"
+import { UpdateCustomerDialog } from "./dialogs/update-customer-dialog"
+import { DeleteCustomerDialog } from "./dialogs/delete-customer-dialog"
+import { Badge } from "@/components/ui/badge"
 
-export function ProductItem({
-  product,
+export function CustomerItem({
+  customer,
 }: {
-  product: typeof products.$inferSelect
+  customer: typeof customers.$inferSelect
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [updateOpen, setUpdateOpen] = useState(false)
@@ -43,12 +52,32 @@ export function ProductItem({
         )}
       >
         <ItemMedia variant="image">
-          <BoxIcon />
+          <UserIcon />
         </ItemMedia>
         <ItemContent>
-          <ItemTitle>{product.name}</ItemTitle>
-          <ItemDescription className="text-lg leading-snug font-medium text-foreground">
-            {formatCurrency(product.priceCents / 100)}
+          <ItemTitle>{customer.name}</ItemTitle>
+          <ItemDescription className="line-clamp-none flex flex-wrap gap-1">
+            {(
+              [
+                ["phone", "هاتف", PhoneIcon],
+                ["secondPhone", "هاتف ثانوي", PhoneIcon],
+                ["nationalId", "رقم بطاقة", IdCardIcon],
+                ["address", "العنوان", MapPinIcon],
+                ["notes", "ملاحظات", NotebookPenIcon],
+              ] as const
+            ).map(
+              ([key, title, Icon]) =>
+                customer[key] && (
+                  <Badge
+                    variant="secondary"
+                    className="h-auto max-w-full min-w-0 whitespace-normal"
+                  >
+                    <Icon />
+                    <span className="font-normal">{title}:</span>
+                    <span>{customer[key]}</span>
+                  </Badge>
+                )
+            )}
           </ItemDescription>
         </ItemContent>
         <ItemActions>
@@ -62,7 +91,7 @@ export function ProductItem({
               <DropdownMenuGroup>
                 <DropdownMenuItem onClick={() => setUpdateOpen(true)}>
                   <EditIcon />
-                  تغيير الاسم أو السعر
+                  تحديث البيانات
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
@@ -70,7 +99,7 @@ export function ProductItem({
                   onClick={() => setDeleteOpen(true)}
                 >
                   <TrashIcon />
-                  حذف الصنف
+                  حذف العميل
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
@@ -78,15 +107,15 @@ export function ProductItem({
         </ItemActions>
       </Item>
 
-      <UpdateProductDialog
+      <UpdateCustomerDialog
         open={updateOpen}
         onOpenChange={setUpdateOpen}
-        product={product}
+        customer={customer}
       />
-      <DeleteProductDialog
+      <DeleteCustomerDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        product={product}
+        customer={customer}
       />
     </>
   )

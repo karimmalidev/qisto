@@ -21,14 +21,12 @@ import {
   ItemContent,
   ItemDescription,
   ItemGroup,
-  ItemMedia,
   ItemTitle,
 } from "@/components/ui/item"
 import { formatCurrency, formatDate, formatNumber } from "@/lib/format"
 import {
   ArrowLeftIcon,
   CoinsIcon,
-  ListIcon,
   MoreVerticalIcon,
   UserIcon,
 } from "lucide-react"

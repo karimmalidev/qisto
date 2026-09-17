@@ -42,7 +42,7 @@ export function CreateProductDialog({
     const form = event.currentTarget
     const formData = new FormData(form)
 
-    const name = formData.get("name") as string
+    const name = (formData.get("name") as string).trim()
     const priceCents = Number(formData.get("price")) * 100
 
     mutation.mutate({ name, priceCents })

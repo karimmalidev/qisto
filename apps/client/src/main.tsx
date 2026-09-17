@@ -16,6 +16,7 @@ import { ProtectedLayout } from "./protected-layout.tsx"
 import { NotFoundPage } from "./pages/not-found/not-found-page.tsx"
 import { ProductsPage } from "./pages/products/products-page.tsx"
 import { initDb } from "./db/index.ts"
+import { CustomersPage } from "./pages/customers/customers-page.tsx"
 
 initDb().then(() =>
   createRoot(document.getElementById("root")!).render(
@@ -35,6 +36,7 @@ initDb().then(() =>
                       <Route element={<ProtectedLayout />}>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/products" element={<ProductsPage />} />
+                        <Route path="/customers" element={<CustomersPage />} />
                       </Route>
                     </Route>
 

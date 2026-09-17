@@ -10,22 +10,22 @@ import {
   AlertDialog,
 } from "@/components/ui/alert-dialog"
 import { Spinner } from "@/components/ui/spinner"
-import type { products } from "@/db/schema"
+import type { customers } from "@/db/schema"
 import { useMutation } from "@tanstack/react-query"
 
-export function DeleteProductDialog({
+export function DeleteCustomerDialog({
   open,
   onOpenChange,
-  product,
+  customer,
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
-  product: typeof products.$inferSelect
+  customer: typeof customers.$inferSelect
 }) {
   const mutation = useMutation({
     mutationFn: () =>
-      AppContainer.getInstance().productService.update({
-        id: product.id,
+      AppContainer.getInstance().customerService.update({
+        id: customer.id,
         deletedAt: new Date(),
       }),
     onSuccess: (_1, _2, _3, { client }) => {
@@ -39,7 +39,9 @@ export function DeleteProductDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>هل انت متاكد؟</AlertDialogTitle>
-          <AlertDialogDescription>سيتم حذف الصنف نهائيا</AlertDialogDescription>
+          <AlertDialogDescription>
+            سيتم حذف العميل نهائيا
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={mutation.isPending}>
